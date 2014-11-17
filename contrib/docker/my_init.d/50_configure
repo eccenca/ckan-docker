@@ -1,0 +1,139 @@
+#!/bin/sh
+
+# URL for solr (required unless linked to a container called 'solr')
+: ${SOLR_URL:=}
+
+# URL for the primary database, in the format expected by sqlalchemy (required
+# unless linked to a container called 'db')
+: ${DATABASE_URL:=}
+
+set -e
+
+# General settings
+CKAN_SITE_URL=${CKAN_SITE_URL:-http://localhost}
+CKAN_DEBUG=${CKAN_DEBUG:-False}
+CKAN_PLUGINS=${CKAN_PLUGINS:-}
+# Default Postgres' full-text search index language
+DB_FT_SEARCH_LANG=${DB_FT_SEARCH_LANG:-english}
+## Internationalisation Settings
+CKAN_LOCALE=${CKAN_LOCALE:-en}
+## Feeds Settings
+CKAN_FEED_AUTHORITY=${CKAN_FEED_AUTHORITY:-}
+CKAN_FEED_DATE=${CKAN_FEED_DATE:-}
+CKAN_FEED_AUTHOR=${CKAN_FEED_AUTHOR:-}
+CKAN_FEED_AUTHOR_LINK=${CKAN_FEED_AUTHOR_LINK:-}
+##storage settings
+CKAN_STORAGE_PATH=${CKAN_DATA:-/var/lib/ckan}
+
+
+# Email to which errors should be sent (optional, default: none)
+EMAIL_TO=${EMAIL_TO:-ckan-admin@localhost}
+EMAIL_FROM=${EMAIL_FROM:-ckan_instance@localhost}
+EMAIL_SMTP_SERVER=${EMAIL_SMTP_SERVER:-smtp.localhost}
+EMAIL_SMTP_STARTTLS=${EMAIL_SMTP_STARTTLS:-True}
+EMAIL_SMTP_USER=${EMAIL_SMTP_USER:-EXAMPLEUSER}
+EMAIL_SMTP_PASS=${EMAIL_SMTP_PASS:-EXAMPLEPASS}
+EMAIL_SMTP_EMAIL_FROM=${EMAIL_SMTP_EMAIL_FROM:-ckan_instance@localhost}
+
+set -eu
+
+CONFIG="${CKAN_CONFIG}/ckan.ini"
+
+abort () {
+  echo "$@" >&2
+  exit 1
+}
+
+write_config () {
+  "$CKAN_HOME"/bin/paster make-config ckan "$CONFIG"
+
+  # set general settings
+  sed -i -e "s&^debug =.*&debug = ${CKAN_DEBUG}&" "$CONFIG"
+  sed -i -e "s&^ckan\.site_url =.*&ckan\.site_url = ${CKAN_SITE_URL}&" "$CONFIG"
+  sed -i -e "s&^ckan\.locale_default =.*&ckan\.locale_default = ${CKAN_LOCALE}&" "$CONFIG"
+  sed -i -r -e "s/^(ckan\.plugins.*)/\1 $CKAN_PLUGINS/" "$CONFIG"
+
+  ##feeds settings
+  sed -i -e "s&^ckan\.feed\.authority_name =.*&ckan\.feed\.authority_name = ${CKAN_FEED_AUTHORITY}&" "$CONFIG"
+  sed -i -e "s&^ckan\.feed\.date =.*&ckan\.feed\.date = ${CKAN_FEED_DATE}&" "$CONFIG"
+  sed -i -e "s&^ckan\.feed\.author_name =.*&ckan\.feed\.author_name = ${CKAN_FEED_AUTHOR}&" "$CONFIG"
+  sed -i -e "s&^ckan\.feed\.author_link =.*&ckan\.feed\.author_link = ${CKAN_FEED_AUTHOR_LINK}&" "$CONFIG"
+
+  #storage settings
+  sed -i -e "s&^#ckan\.storage_path =.*&ckan\.storage_path = ${CKAN_STORAGE_PATH}&" "$CONFIG"
+
+  #add email config
+  sed -i -e "s&^email_to =.*&email_to = ${EMAIL_TO}&" "$CONFIG"
+  sed -i -e "s&^error_email_from =.*&error_email_from = ${EMAIL_FROM}&" "$CONFIG"
+
+  sed -i -e "s&^smtp\.server =.*&smtp\.server = ${EMAIL_SMTP_SERVER}&" "$CONFIG"
+  sed -i -e "s&^smtp\.starttls =.*&smtp\.starttls = ${EMAIL_SMTP_STARTTLS}&" "$CONFIG"
+  sed -i -e "s&^#smtp\.user =.*&smtp\.user = ${EMAIL_SMTP_USER}&" "$CONFIG"
+  sed -i -e "s&^#smtp\.password =.*&smtp\.password = ${EMAIL_SMTP_PASS}&" "$CONFIG"
+  sed -i -e "s&^#smtp\.mail_from =.*&smtp\.mail_from = ${EMAIL_SMTP_EMAIL_FROM}&" "$CONFIG"
+
+  #set database params
+  sed -i -e "s&^sqlalchemy\.url =.*&sqlalchemy\.url = ${DATABASE_URL}&" "$CONFIG"
+
+  #set solr params
+  #SOLR_URL=$(link_solr_url)
+  sed -i -e "s&^#solr_url =.*&solr_url = ${SOLR_URL}&" "$CONFIG"
+  ## Default Postgres' full-text search index language
+  sed -i -e "s&^ckan\.datastore\.default_fts_lang =.*&ckan\.datastore\.default_fts_lang = ${DB_FT_SEARCH_LANG}&" "$CONFIG"
+
+  ## Authorization Settings
+  sed -i -e "s&^ckan\.auth\.anon_create_dataset =.*&ckan\.auth\.anon_create_dataset = false&" "$CONFIG"
+  sed -i -e "s&^ckan\.auth\.create_unowned_dataset =.*&ckan\.auth\.create_unowned_dataset = false&" "$CONFIG"
+  sed -i -e "s&^ckan\.auth\.create_dataset_if_not_in_organization =.*&ckan\.auth\.create_dataset_if_not_in_organization = false&" "$CONFIG"
+  sed -i -e "s&^ckan\.auth\.user_create_groups =.*&ckan\.auth\.user_create_groups = false&" "$CONFIG"
+  sed -i -e "s&^ckan\.auth\.user_create_organizations =.*&ckan\.auth\.user_create_organizations = false&" "$CONFIG"
+  sed -i -e "s&^ckan\.auth\.user_delete_groups =.*&ckan\.auth\.user_delete_groups = false&" "$CONFIG"
+  sed -i -e "s&^ckan\.auth\.user_delete_organizations =.*&ckan\.auth\.user_delete_organizations = false&" "$CONFIG"
+  sed -i -e "s&^ckan\.auth\.create_user_via_api =.*&ckan\.auth\.create_user_via_api = false&" "$CONFIG"
+  sed -i -e "s&^ckan\.auth\.create_user_via_web =.*&ckan\.auth\.create_user_via_web = true&" "$CONFIG"
+  sed -i -e "s&^ckan\.auth\.roles_that_cascade_to_sub_groups =.*&ckan\.auth\.roles_that_cascade_to_sub_groups = admin&" "$CONFIG"
+
+  echo "
+[handler_file]
+class = FileHandler
+args = (\"/var/log/ckan/ckan_ext.log\", \"a\",)
+level = DEBUG
+formatter = generic" >> "$CONFIG"
+
+  sed -i -r -e 's/^(handlers = console.*)/\1, file/' "$CONFIG"
+  sed -i -r -e 's/^(keys = console*)/\1, file/' "$CONFIG"
+
+  #if [ -n "$ERROR_EMAIL" ]; then
+  #  sed -i -e "s&^#email_to.*&email_to = ${ERROR_EMAIL}&" "$CONFIG"
+  #fi
+}
+
+link_postgres_url () {
+  local user=$DB_ENV_POSTGRESQL_USER
+  local pass=$DB_ENV_POSTGRESQL_USER
+  local db=$DB_ENV_POSTGRESQL_DB
+  local host=$DB_PORT_5432_TCP_ADDR
+  local port=$DB_PORT_5432_TCP_PORT
+  echo "postgresql://${user}:${pass}@${host}:${port}/${db}"
+}
+
+link_solr_url () {
+  local host=$SOLR_PORT_8983_TCP_ADDR
+  local port=$SOLR_PORT_8983_TCP_PORT
+  echo "http://${host}:${port}/solr/ckan"
+}
+
+# If we don't already have a config file, bootstrap
+if [ ! -e "$CONFIG" ]; then
+  if [ -z "$DATABASE_URL" ]; then
+    if ! DATABASE_URL=$(link_postgres_url); then
+      abort "no DATABASE_URL specified and linked container called 'db' was not found"
+    fi
+  fi
+  if [ -z "$SOLR_URL" ]; then
+    if ! SOLR_URL=$(link_solr_url); then
+      abort "no SOLR_URL specified and linked container called 'solr' was not found"
+    fi
+  fi
+  write_config
+fi
