@@ -34,7 +34,7 @@ EMAIL_SMTP_STARTTLS=${EMAIL_SMTP_STARTTLS:-True}
 EMAIL_SMTP_USER=${EMAIL_SMTP_USER:-EXAMPLEUSER}
 EMAIL_SMTP_PASS=${EMAIL_SMTP_PASS:-EXAMPLEPASS}
 EMAIL_SMTP_EMAIL_FROM=${EMAIL_SMTP_EMAIL_FROM:-ckan_instance@localhost}
-
+ADDITIONAL_LICENCES=${ADDITIONAL_LICENCES:-}
 set -eu
 
 CONFIG="${CKAN_CONFIG}/ckan.ini"
@@ -52,6 +52,7 @@ write_config () {
   sed -i -e "s&^ckan\.site_url =.*&ckan\.site_url = ${CKAN_SITE_URL}&" "$CONFIG"
   sed -i -e "s&^ckan\.locale_default =.*&ckan\.locale_default = ${CKAN_LOCALE}&" "$CONFIG"
   sed -i -r -e "s/^(ckan\.plugins.*)/\1 $CKAN_PLUGINS/" "$CONFIG"
+  sed -i -e "s&^#licenses_group_url =.*&licenses_group_url = ${ADDITIONAL_LICENCES}&" "$CONFIG"
 
   ##feeds settings
   sed -i -e "s&^ckan\.feed\.authority_name =.*&ckan\.feed\.authority_name = ${CKAN_FEED_AUTHORITY}&" "$CONFIG"
