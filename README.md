@@ -9,20 +9,20 @@ docker build -t eccenca/baseimage:0.9.15 .
 
 ## eccenca/ckan
 ```
-git clone https://gitlab.eccenca.com/lecos/ckan_docker.git
+git clone https://github.com/eccenca/ckan_docker.git
 cd ckan_docker
 docker build -t eccenca/ckan:2.2.1 .
 ```
 
 ### eccenca/ckan_solr
 ```
-cd contrib/docker/solr
+cd ckan_docker/contrib/docker/solr
 docker build -t eccenca/ckan_solr .
 ```
 
 ### eccenca/ckan_postgresql
 ```
-cd contrib/docker/postgresql
+cd ckan_docker/contrib/docker/postgresql
 docker build -t eccenca/ckan_postgresql .
 ```
 
