@@ -3,7 +3,7 @@
 ## eccenca/baseimage_docker
 ```
 git clone https://github.com/eccenca/baseimage-docker.git
-cd baseimage-docker
+cd baseimage-docker/image
 docker build -t eccenca/baseimage:0.9.15 .
 ```
 
