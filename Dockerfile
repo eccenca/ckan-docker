@@ -10,6 +10,7 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV HOME /root
 ENV CKAN_VERSION 2.2.1
 ENV CKAN ckan-$CKAN_VERSION
+ENV CKAN_REPO https://github.com/eccenca/ckan.git
 ENV CKAN_HOME /usr/lib/ckan/default
 ENV CKAN_CONFIG /etc/ckan/default
 ENV CKAN_DATA /var/lib/ckan
@@ -27,7 +28,7 @@ RUN virtualenv $CKAN_HOME
 RUN mkdir -p $CKAN_HOME $CKAN_CONFIG $CKAN_DATA
 RUN chown www-data:www-data $CKAN_DATA
 
-RUN git clone https://github.com/eccenca/ckan.git $CKAN_HOME/src/ckan/
+RUN git clone $CKAN_REPO $CKAN_HOME/src/ckan/
 RUN cd $CKAN_HOME/src/ckan/ && git checkout $CKAN && cd -
 RUN $CKAN_HOME/bin/pip install -r $CKAN_HOME/src/ckan/requirements.txt
 RUN $CKAN_HOME/bin/pip install -e $CKAN_HOME/src/ckan/
