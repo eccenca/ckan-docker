@@ -17,6 +17,7 @@ CKAN_PLUGINS=${CKAN_PLUGINS:-}
 DB_FT_SEARCH_LANG=${DB_FT_SEARCH_LANG:-english}
 ## Internationalisation Settings
 CKAN_LOCALE=${CKAN_LOCALE:-en}
+CKAN_LOCALES_OFFERED=${CKAN_LOCALES_OFFERED:-}
 ## Feeds Settings
 CKAN_FEED_AUTHORITY=${CKAN_FEED_AUTHORITY:-}
 CKAN_FEED_DATE=${CKAN_FEED_DATE:-}
@@ -51,6 +52,7 @@ write_config () {
   sed -i -e "s&^debug =.*&debug = ${CKAN_DEBUG}&" "$CONFIG"
   sed -i -e "s&^ckan\.site_url =.*&ckan\.site_url = ${CKAN_SITE_URL}&" "$CONFIG"
   sed -i -e "s&^ckan\.locale_default =.*&ckan\.locale_default = ${CKAN_LOCALE}&" "$CONFIG"
+  sed -i -e "s&^ckan\.locales_offered =.*&ckan\.locales_offered = ${CKAN_LOCALES_OFFERED}&" "$CONFIG"
   sed -i -r -e "s/^(ckan\.plugins.*)/\1 $CKAN_PLUGINS/" "$CONFIG"
   sed -i -e "s&^#licenses_group_url =.*&licenses_group_url = ${ADDITIONAL_LICENCES}&" "$CONFIG"
 
