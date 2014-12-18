@@ -15,6 +15,7 @@ ENV CKAN_HOME /usr/lib/ckan/default
 ENV CKAN_CONFIG /etc/ckan/default
 ENV CKAN_DATA /var/lib/ckan
 
+# enable for github performance problem on local build
 # ENV _PROXY http://mopsos.eccenca.com:3128
 
 # Install required packages
