@@ -25,6 +25,8 @@ CKAN_FEED_AUTHOR=${CKAN_FEED_AUTHOR:-}
 CKAN_FEED_AUTHOR_LINK=${CKAN_FEED_AUTHOR_LINK:-}
 ##storage settings
 CKAN_STORAGE_PATH=${CKAN_DATA:-/var/lib/ckan}
+##activity stream
+CKAN_ACTIVITY_STREAM_ENABLED=${CKAN_ACTIVITY_STREAM_ENABLED:-True}
 
 
 # Email to which errors should be sent (optional, default: none)
@@ -64,6 +66,10 @@ write_config () {
 
   #storage settings
   sed -i -e "s&^#ckan\.storage_path =.*&ckan\.storage_path = ${CKAN_STORAGE_PATH}&" "$CONFIG"
+
+  # activity stream config
+  sed -i -e "s&^ckan.activity_streams_enabled =.*&ckan.activity_streams_enabled = ${CKAN_ACTIVITY_STREAM_ENABLED}&" "$CONFIG"
+
 
   #add email config
   sed -i -e "s&^email_to =.*&email_to = ${EMAIL_TO}&" "$CONFIG"
