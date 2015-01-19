@@ -1,4 +1,4 @@
-FROM eccenca/baseimage:latest
+FROM registry.docker.eccenca.com/baseimage:latest
 
 MAINTAINER Open Knowledge
 
