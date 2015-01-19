@@ -68,8 +68,7 @@ write_config () {
   sed -i -e "s&^#ckan\.storage_path =.*&ckan\.storage_path = ${CKAN_STORAGE_PATH}&" "$CONFIG"
 
   # activity stream config
-  sed -i -e "s&^ckan.activity_streams_enabled =.*&ckan.activity_streams_enabled = ${CKAN_ACTIVITY_STREAM_ENABLED}&" "$CONFIG"
-
+  sed -i -e "s&^#ckan.activity_streams_enabled =.*&ckan.activity_streams_enabled = ${CKAN_ACTIVITY_STREAM_ENABLED}&" "$CONFIG"
 
   #add email config
   sed -i -e "s&^email_to =.*&email_to = ${EMAIL_TO}&" "$CONFIG"
