@@ -1,4 +1,4 @@
-FROM eccenca/baseimage:0.9.15
+FROM eccenca/baseimage:latest
 
 MAINTAINER Open Knowledge
 
