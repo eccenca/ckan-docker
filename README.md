@@ -69,6 +69,8 @@ The ckan.ini configuration file is created during container start. The following
 	* ``CKAN_FEED_AUTHOR_LINK`` (unset)
 * storage settings
 	* ``CKAN_STORAGE_PATH`` (/var/lib/ckan)
+* activity stream
+	* ``CKAN_ACTIVITY_STREAM_ENABLED`` (True)
 * Email settings
 	* ``EMAIL_TO`` (ckan-admin@localhost)
 	* ``EMAIL_FROM`` (ckan_instance@localhost)
