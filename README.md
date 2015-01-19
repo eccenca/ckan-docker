@@ -4,42 +4,42 @@
 ```
 git clone https://github.com/eccenca/baseimage-docker.git
 cd baseimage-docker/image
-docker build -t eccenca/baseimage:0.9.15 .
+docker build -t registry.docker.eccenca.com/baseimage:latest .
 ```
 
 ## eccenca/ckan
 ```
 git clone https://github.com/eccenca/ckan_docker.git
 cd ckan_docker
-docker build -t eccenca/ckan:2.2.1 .
+docker build -t registry.docker.eccenca.com/ckan:latest .
 ```
 
 ### eccenca/ckan_solr
 ```
 cd ckan_docker/contrib/docker/solr
-docker build -t eccenca/ckan_solr .
+docker build -t registry.docker.eccenca.com/ckan_solr:latest .
 ```
 
 ### eccenca/ckan_postgresql
 ```
 cd ckan_docker/contrib/docker/postgresql
-docker build -t eccenca/ckan_postgresql .
+docker build -t registry.docker.eccenca.com/ckan_postgresql:latest .
 ```
 
 # run ckan
 ## solr
 ```
-docker run -d --name ckan_solr_1 eccenca/ckan_solr
+docker run -d --name ckan_solr_1 registry.docker.eccenca.com/ckan_solr:latest
 ```
 
 ## postgresql
 ```
-docker run -d --name ckan_db_1 eccenca/ckan_postgresql
+docker run -d --name ckan_db_1 registry.docker.eccenca.com/ckan_postgresql:latest
 ```
 
 ## ckan
 ```
-docker run -it --rm --link ckan_solr_1:solr --link ckan_db_1:db -p 80:80  --name eccenca_ckan eccenca/ckan:2.2.1 /bin/bash
+docker run -it --rm --link ckan_solr_1:solr --link ckan_db_1:db -p 80:80  --name registry.docker.eccenca.com/ckan:latest /bin/bash
 ```
 within the container:
 ```
@@ -48,7 +48,7 @@ within the container:
 
 or with
 ```
-docker run -it --rm --link ckan_solr_1:solr --link ckan_db_1:db -p 80:80  --name eccenca_ckan eccenca/ckan:2.2.1
+docker run -it --rm --link ckan_solr_1:solr --link ckan_db_1:db -p 80:80  --name eccenca_ckan registry.docker.eccenca.com/ckan:latest
 ```
 
 ### ckan configuration
