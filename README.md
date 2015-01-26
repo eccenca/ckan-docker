@@ -1,45 +1,45 @@
 # installation /build-process
 
-## eccenca/baseimage_docker
+## eccenca/baseimage-docker
 ```
 git clone https://github.com/eccenca/baseimage-docker.git
 cd baseimage-docker/image
-docker build -t registry.docker.eccenca.com/baseimage:latest .
+docker build -t eccenca/baseimage:latest .
 ```
 
 ## eccenca/ckan
 ```
-git clone https://github.com/eccenca/ckan_docker.git
-cd ckan_docker
-docker build -t registry.docker.eccenca.com/ckan:latest .
+git clone https://github.com/eccenca/ckan-docker.git
+cd ckan-docker
+docker build -t eccenca/ckan:latest .
 ```
 
-### eccenca/ckan_solr
+### eccenca/ckan-solr
 ```
-cd ckan_docker/contrib/docker/solr
-docker build -t registry.docker.eccenca.com/ckan_solr:latest .
+cd ckan-docker/contrib/docker/solr
+docker build -t eccenca/ckan-solr:latest .
 ```
 
-### eccenca/ckan_postgresql
+### eccenca/ckan-postgresql
 ```
-cd ckan_docker/contrib/docker/postgresql
-docker build -t registry.docker.eccenca.com/ckan_postgresql:latest .
+cd ckan-docker/contrib/docker/postgresql
+docker build -t eccenca/ckan-postgresql:latest .
 ```
 
 # run ckan
 ## solr
 ```
-docker run -d --name ckan_solr_1 registry.docker.eccenca.com/ckan_solr:latest
+docker run -d --name ckan_solr eccenca/ckan-solr:latest
 ```
 
 ## postgresql
 ```
-docker run -d --name ckan_db_1 registry.docker.eccenca.com/ckan_postgresql:latest
+docker run -d --name ckan_db reccenca/ckan-postgresql:latest
 ```
 
 ## ckan
 ```
-docker run -it --rm --link ckan_solr_1:solr --link ckan_db_1:db -p 80:80  --name registry.docker.eccenca.com/ckan:latest /bin/bash
+docker run -it --rm --link ckan_solr:solr --link ckan_db:db -p 80:80  --name ckan_ckan eccenca/ckan:latest /bin/bash
 ```
 within the container:
 ```
@@ -48,7 +48,7 @@ within the container:
 
 or with
 ```
-docker run -it --rm --link ckan_solr_1:solr --link ckan_db_1:db -p 80:80  --name eccenca_ckan registry.docker.eccenca.com/ckan:latest
+docker run -it --rm --link ckan_solr:solr --link ckan_db:db -p 80:80  --name ckan_ckan eccenca/ckan:latest
 ```
 
 ### ckan configuration
