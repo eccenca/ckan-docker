@@ -1,6 +1,13 @@
-
-FROM ubuntu:14.04
+####
+#
+# Dockerfile for building a postgresql;
+#
+# with scope to ckan
+#
+####
+FROM eccenca/baseimage:1.0.0
 MAINTAINER Henri Knochenhauer <henri.knochenhauer@eccenca.com>
+MAINTAINER René Pietzsch <rene.pietzsch@eccenca.com>
 
 #set env
 ENV DEBIAN_FRONTEND noninteractive
@@ -11,7 +18,6 @@ RUN update-locale LANG=en_US.UTF-8
 
 RUN \ 
    apt-get -qq update &&  \
-   apt-get install -y curl wget vim && \
    apt-get install -y postgresql-9.3 postgresql-contrib-9.3 && \
    apt-get install -y postgresql-9.3-postgis-2.1 libpq-dev sudo && \
    apt-get install -y python-dev libxml2-dev libxslt1-dev libgeos-c1
