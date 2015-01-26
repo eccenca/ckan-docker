@@ -1,9 +1,21 @@
-FROM ubuntu:14.04
-MAINTAINER Open Knowledge
+####
+#
+# Dockerfile for building a Apache Solr;
+#
+# with scope to ckan
+#
+####
+FROM eccenca/baseimage:1.0.0
+MAINTAINER Henri Knochenhauer <henri.knochenhauer@eccenca.com>
+MAINTAINER René Pietzsch <rene.pietzsch@eccenca.com>
+
+
+#set env
+ENV DEBIAN_FRONTEND noninteractive
 
 # Install Java
-RUN apt-get -q -y update
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install default-jre-headless
+RUN apt-get -q -y update && \
+    apt-get -q -y install default-jre-headless
 
 # Install Solr
 ENV SOLR_HOME /opt/solr/example/solr
