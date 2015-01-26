@@ -1,6 +1,13 @@
-FROM registry.docker.eccenca.com/baseimage:latest
-
-MAINTAINER Open Knowledge
+####
+#
+# Dockerfile for building a ckan;
+#
+# with scope to ckan
+#
+####
+FROM eccenca/baseimage:1.0.0
+MAINTAINER Henri Knochenhauer <henri.knochenhauer@eccenca.com>
+MAINTAINER René Pietzsch <rene.pietzsch@eccenca.com>
 
 # Disable SSH
 RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh
@@ -15,9 +22,6 @@ ENV CKAN_HOME /usr/lib/ckan/default
 ENV CKAN_CONFIG /etc/ckan/default
 ENV CKAN_DATA /var/lib/ckan
 
-# enable for github performance problem on local build
-# ENV _PROXY http://mopsos.eccenca.com:3128
-
 # Install required packages
 RUN apt-get -y update && \
     apt-get -y install python-minimal python-dev python-virtualenv && \
@@ -31,7 +35,7 @@ RUN virtualenv $CKAN_HOME
 RUN mkdir -p $CKAN_HOME $CKAN_CONFIG $CKAN_DATA
 RUN chown www-data:www-data $CKAN_DATA
 
-RUN https_proxy=$_PROXY git clone $CKAN_REPO $CKAN_HOME/src/ckan/
+RUN git clone $CKAN_REPO $CKAN_HOME/src/ckan/
 RUN cd $CKAN_HOME/src/ckan/ && git checkout $CKAN && cd -
 RUN $CKAN_HOME/bin/pip install -r $CKAN_HOME/src/ckan/requirements.txt
 RUN $CKAN_HOME/bin/pip install -e $CKAN_HOME/src/ckan/
