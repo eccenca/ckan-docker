@@ -5,7 +5,7 @@
 # with scope to ckan
 #
 ####
-FROM ubuntu:14.04
+FROM eccenca/baseimage:1.0.0
 MAINTAINER Henri Knochenhauer <henri.knochenhauer@eccenca.com>
 MAINTAINER René Pietzsch <rene.pietzsch@eccenca.com>
 
