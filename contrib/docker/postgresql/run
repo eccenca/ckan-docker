@@ -1,6 +1,13 @@
 #!/bin/bash
 set -e
 
+mkdir /etc/ssl/private-copy
+mv /etc/ssl/private/* /etc/ssl/private-copy/ 
+rm -r /etc/ssl/private 
+mv /etc/ssl/private-copy /etc/ssl/private 
+chmod -R 0700 /etc/ssl/private 
+chown -R postgres /etc/ssl/private
+
 POSTGRESQL_USER=${POSTGRESQL_USER:-"docker"}
 POSTGRESQL_PASS=${POSTGRESQL_PASS:-"docker"}
 POSTGRESQL_DB=${POSTGRESQL_DB:-"docker"}
