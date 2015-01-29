@@ -38,6 +38,12 @@ EMAIL_SMTP_USER=${EMAIL_SMTP_USER:-EXAMPLEUSER}
 EMAIL_SMTP_PASS=${EMAIL_SMTP_PASS:-EXAMPLEPASS}
 EMAIL_SMTP_EMAIL_FROM=${EMAIL_SMTP_EMAIL_FROM:-ckan_instance@localhost}
 ADDITIONAL_LICENCES=${ADDITIONAL_LICENCES:-}
+
+# ckanext-sparql config
+CKANEXT_SPARQL_ENDPOINT_URL=${CKANEXT_SPARQL_ENDPOINT_URL:-http://dbpedia.org/sparql}
+CKANEXT_SPARQL_HIDE_ENDPOINT_URL=${CKANEXT_SPARQL_HIDE_ENDPOINT_URL:-False}
+
+
 set -eu
 
 CONFIG="${CKAN_CONFIG}/ckan.ini"
@@ -107,6 +113,11 @@ class = FileHandler
 args = (\"/var/log/ckan/ckan_ext.log\", \"a\",)
 level = DEBUG
 formatter = generic" >> "$CONFIG"
+
+  echo "
+# ckanext-sparql config parameter
+ckanext.sparql.endpoint_url = ${CKANEXT_SPARQL_ENDPOINT_URL}
+ckanext.sparql.hide_endpoint_url = ${CKANEXT_SPARQL_HIDE_ENDPOINT_URL}" >> "$CONFIG" 
 
   sed -i -r -e 's/^(handlers = console.*)/\1, file/' "$CONFIG"
   sed -i -r -e 's/^(keys = console*)/\1, file/' "$CONFIG"
