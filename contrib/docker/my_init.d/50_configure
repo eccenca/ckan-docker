@@ -106,6 +106,9 @@ write_config () {
   sed -i -e "s&^ckan\.auth\.create_user_via_api =.*&ckan\.auth\.create_user_via_api = false&" "$CONFIG"
   sed -i -e "s&^ckan\.auth\.create_user_via_web =.*&ckan\.auth\.create_user_via_web = true&" "$CONFIG"
   sed -i -e "s&^ckan\.auth\.roles_that_cascade_to_sub_groups =.*&ckan\.auth\.roles_that_cascade_to_sub_groups = admin&" "$CONFIG"
+  
+  ## put new ckanext param befor logging
+  sed -i -e "s&^## Logging configuration&# ckanext-sparql config parameter\nckanext.sparql.endpoint_url = ${CKANEXT_SPARQL_ENDPOINT_URL}\nckanext.sparql.hide_endpoint_url = ${CKANEXT_SPARQL_HIDE_ENDPOINT_URL}\n\n## Logging configuration&" "$CONFIG"
 
   echo "
 [handler_file]
@@ -113,11 +116,6 @@ class = FileHandler
 args = (\"/var/log/ckan/ckan_ext.log\", \"a\",)
 level = DEBUG
 formatter = generic" >> "$CONFIG"
-
-  echo "
-# ckanext-sparql config parameter
-ckanext.sparql.endpoint_url = ${CKANEXT_SPARQL_ENDPOINT_URL}
-ckanext.sparql.hide_endpoint_url = ${CKANEXT_SPARQL_HIDE_ENDPOINT_URL}" >> "$CONFIG" 
 
   sed -i -r -e 's/^(handlers = console.*)/\1, file/' "$CONFIG"
   sed -i -r -e 's/^(keys = console*)/\1, file/' "$CONFIG"
