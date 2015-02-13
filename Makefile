@@ -1,6 +1,6 @@
 export DOCKER_CMD=docker
 
-export CKAN_RELEASE=develop
+export CKAN_RELEASE=2.2.1-4
 export VIRTUOSO_RELEASE=1.0.0
 export NAME=eccenca/ckan-docker:${CKAN_RELEASE}
 export TAG=eccenca/ckan-docker:latest
@@ -16,14 +16,14 @@ run:
 	# start a container in the background
 	$(DOCKER_CMD) run -d --name ckan-solr eccenca/ckan-solr:$(CKAN_RELEASE)
 	$(DOCKER_CMD) run -d --name ckan-db eccenca/ckan-postgresql:$(CKAN_RELEASE)
-	$(DOCKER_CMD) run -it --name ckan --link ckan-solr:solr --link ckan-db:db -p 81:80 -p 8081:8080  $(NAME) /bin/bash
+	$(DOCKER_CMD) run -it --name ckan --link ckan-solr:solr --link ckan-db:db -p 80:80 -p 8080:8080  $(NAME) /bin/bash
 
 run-ckan:
 	# start a container in the background
-	$(DOCKER_CMD) run -d --name ckan --link ckan-solr:solr --link ckan-db:db -p 81:80 -p 8081:8080 -e CKAN_SITE_URL=http://lecos.p1.eccenca.com/ $(NAME)
+	$(DOCKER_CMD) run -d --name ckan --link ckan-solr:solr --link ckan-db:db -p 80:80 -p 8080:8080 $(NAME)
 
 run-ckan-bash:
-	$(DOCKER_CMD) run -it --name ckan --link ckan-solr:solr --link ckan-db:db -p 81:80 -p 8081:8080 -e CKAN_SITE_URL=http://lecos.p1.eccenca.com/ $(NAME) /bin/bash
+	$(DOCKER_CMD) run -it --name ckan --link ckan-solr:solr --link ckan-db:db -p 80:80 -p 8080:8080 $(NAME) /bin/bash
 
 exec:
 	$(DOCKER_CMD) exec -it ckan /bin/bash
