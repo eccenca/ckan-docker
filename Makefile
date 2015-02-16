@@ -1,6 +1,6 @@
 export DOCKER_CMD=docker
 
-export CKAN_RELEASE=2.2.1-4
+export CKAN_RELEASE=2.2.1-5
 export VIRTUOSO_RELEASE=1.0.0
 export NAME=eccenca/ckan-docker:${CKAN_RELEASE}
 export TAG=eccenca/ckan-docker:latest
@@ -16,7 +16,7 @@ run:
 	# start a container in the background
 	$(DOCKER_CMD) run -d --name ckan-solr eccenca/ckan-solr:$(CKAN_RELEASE)
 	$(DOCKER_CMD) run -d --name ckan-db eccenca/ckan-postgresql:$(CKAN_RELEASE)
-	$(DOCKER_CMD) run -it --name ckan --link ckan-solr:solr --link ckan-db:db -p 80:80 -p 8080:8080  $(NAME) /bin/bash
+	$(DOCKER_CMD) run -it --name ckan --link ckan-solr:solr --link ckan-db:db -p 80:80 -p 8080:8080 $(NAME) /bin/bash
 
 run-ckan:
 	# start a container in the background
