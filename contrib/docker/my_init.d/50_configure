@@ -25,6 +25,8 @@ CKAN_FEED_AUTHOR=${CKAN_FEED_AUTHOR:-}
 CKAN_FEED_AUTHOR_LINK=${CKAN_FEED_AUTHOR_LINK:-}
 ##storage settings
 CKAN_STORAGE_PATH=${CKAN_DATA:-/var/lib/ckan}
+##spatial-ext
+CKAN_SPATIAL_SEARCH_BACKEND=${CKAN_SPATIAL_SEARCH_BACKEND:-solr}
 ##activity stream
 CKAN_ACTIVITY_STREAM_ENABLED=${CKAN_ACTIVITY_STREAM_ENABLED:-True}
 
@@ -115,6 +117,9 @@ write_config () {
 
   ## put ckanext-leipzigtheme param befor logging
   sed -i -e "s&^## Logging configuration&# ckanext-leipzigtheme dataproxy config parameter\nckanext.leipzigtheme.dataproxy_url = ${CKANEXT_LE_DATAPROXY_URL}\n\n## Logging configuration&" "$CONFIG"
+
+  sed -i -e "s&^## ckanext-spatial configuration&# ckanext.spatial.search_backend config parameter\nckanext.spatial.search_backend = ${CKAN_SPATIAL_SEARCH_BACKEND}\n&" "$CONFIG"
+
 
   echo "
 [handler_file]
