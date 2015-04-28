@@ -44,12 +44,6 @@ RUN $CKAN_HOME/bin/pip install -e $CKAN_HOME/src/ckan/
 RUN ln -s $CKAN_HOME/src/ckan/ckan/config/who.ini $CKAN_CONFIG/who.ini
 ADD ./contrib/docker/apache.wsgi $CKAN_CONFIG/apache.wsgi
 
-# create log path and file
-RUN \
-    mkdir -p /var/log/ckan && \
-    touch /var/log/ckan/ckan_ext.log&& \
-    chmod -R 777 /var/log/ckan
-
 # Configure apache
 ADD ./contrib/docker/apache.conf /etc/apache2/sites-available/ckan_default.conf
 RUN echo "Listen 8080" > /etc/apache2/ports.conf
