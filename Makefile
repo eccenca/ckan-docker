@@ -1,6 +1,7 @@
 export DOCKER_CMD=docker
 
-export CKAN_RELEASE=2.2.1-5
+#export CKAN_RELEASE=2.2.1-6
+export CKAN_RELEASE=$(shell git describe --always --dirty --tags | cut -c 5-)
 export VIRTUOSO_RELEASE=1.0.0
 export NAME=eccenca/ckan-docker:${CKAN_RELEASE}
 export TAG=eccenca/ckan-docker:latest

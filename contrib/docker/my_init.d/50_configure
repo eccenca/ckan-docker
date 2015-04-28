@@ -48,6 +48,8 @@ CKANEXT_SPARQL_HIDE_ENDPOINT_URL=${CKANEXT_SPARQL_HIDE_ENDPOINT_URL:-False}
 # ckanext-leipzigtheme config
 CKANEXT_LE_DATAPROXY_URL=${CKANEXT_LE_DATAPROXY_URL:-//jsonpdataproxy.appspot.com}
 
+# ckanext-harvest backend config
+CKANEXT_HARVEST_BACKEND=${CKANEXT_HARVEST_BACKEND:-}
 
 set -eu
 
@@ -59,6 +61,11 @@ abort () {
 }
 
 write_config () {
+  # create log path and file
+  mkdir -p /var/log/ckan
+  touch /var/log/ckan/ckan_ext.log
+  chmod -R 777 /var/log/ckan
+
   "$CKAN_HOME"/bin/paster make-config ckan "$CONFIG"
 
   # set general settings
@@ -120,6 +127,10 @@ write_config () {
 
   sed -i -e "s&^## ckanext-spatial configuration&# ckanext.spatial.search_backend config parameter\nckanext.spatial.search_backend = ${CKAN_SPATIAL_SEARCH_BACKEND}\n&" "$CONFIG"
 
+  ## add redis harvester config to ckan.ini:
+  if [ ! -z "$DATABASE_URL" ]; then
+  	sed -i -e "s&^## Logging configuration&# ckanext-harvest harvest backend config\nckan.harvest.mq.type = ${CKANEXT_HARVEST_BACKEND}\n\n## Logging configuration&" "$CONFIG"
+  fi
 
   echo "
 [handler_file]

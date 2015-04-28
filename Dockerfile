@@ -5,7 +5,7 @@
 # with scope to ckan
 #
 ####
-FROM eccenca/baseimage:1.0.0
+FROM eccenca/baseimage:1.0.1
 MAINTAINER Henri Knochenhauer <henri.knochenhauer@eccenca.com>
 MAINTAINER René Pietzsch <rene.pietzsch@eccenca.com>
 
@@ -43,12 +43,6 @@ RUN $CKAN_HOME/bin/pip install -r $CKAN_HOME/src/ckan/requirements.txt
 RUN $CKAN_HOME/bin/pip install -e $CKAN_HOME/src/ckan/
 RUN ln -s $CKAN_HOME/src/ckan/ckan/config/who.ini $CKAN_CONFIG/who.ini
 ADD ./contrib/docker/apache.wsgi $CKAN_CONFIG/apache.wsgi
-
-# create log path and file
-RUN \
-    mkdir -p /var/log/ckan && \
-    touch /var/log/ckan/ckan_ext.log&& \
-    chmod -R 777 /var/log/ckan
 
 # Configure apache
 ADD ./contrib/docker/apache.conf /etc/apache2/sites-available/ckan_default.conf
