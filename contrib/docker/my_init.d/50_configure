@@ -64,7 +64,7 @@ write_config () {
   # create log path and file
   mkdir -p /var/log/ckan
   touch /var/log/ckan/ckan_ext.log
-  chmod -R 777 /var/log/ckan
+  chmod 777 /var/log/ckan/ckan_ext.log
 
   "$CKAN_HOME"/bin/paster make-config ckan "$CONFIG"
 
