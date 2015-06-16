@@ -9,7 +9,7 @@ docker build -t eccenca/baseimage:latest .
 
 ## eccenca/ckan
 ```
-git clone https://github.com/eccenca/ckan-docker.git
+git clone --recursive https://github.com/eccenca/ckan-docker.git
 cd ckan-docker
 docker build -t eccenca/ckan:latest .
 ```
@@ -34,7 +34,7 @@ docker run -d --name ckan_solr eccenca/ckan-solr:latest
 
 ## postgresql
 ```
-docker run -d --name ckan_db reccenca/ckan-postgresql:latest
+docker run -d --name ckan_db eccenca/ckan-postgresql:latest
 ```
 
 ## ckan
