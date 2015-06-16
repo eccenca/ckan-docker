@@ -60,6 +60,10 @@ abort () {
   exit 1
 }
 
+write_postfix_main_cf () {
+  echo "relayhost = [${EMAIL_SMTP_SERVER}]:25" >> /etc/postfix/main.cf
+}
+
 write_config () {
   # create log path and file
   mkdir -p /var/log/ckan
@@ -175,4 +179,5 @@ if [ ! -e "$CONFIG" ]; then
     fi
   fi
   write_config
+  write_postfix_main_cf
 fi
