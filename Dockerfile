@@ -15,7 +15,7 @@ RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh
 ENV DEBIAN_FRONTEND noninteractive
 
 ENV HOME /root
-ENV CKAN_VERSION 2.2.1
+ENV CKAN_VERSION 2.2.3
 ENV CKAN ckan-$CKAN_VERSION
 #ENV CKAN_REPO https://github.com/eccenca/ckan.git
 ENV CKAN_HOME /usr/lib/ckan/default
