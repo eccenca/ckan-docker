@@ -19,9 +19,9 @@ RUN apt-get -q -y update && \
 
 # Install Solr
 ENV SOLR_HOME /opt/solr/example/solr
-ENV SOLR_VERSION 4.10.2
+ENV SOLR_VERSION 4.10.4
 ENV SOLR solr-$SOLR_VERSION
-ENV CKAN_VERSION 2.2.1
+ENV CKAN_VERSION 2.2.3
 
 RUN mkdir -p /opt/solr
 ADD http://ftp-stud.hs-esslingen.de/pub/Mirrors/ftp.apache.org/dist/lucene/solr/$SOLR_VERSION/$SOLR.tgz /opt/$SOLR.tgz
