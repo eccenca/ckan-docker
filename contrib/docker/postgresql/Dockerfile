@@ -12,11 +12,11 @@ MAINTAINER René Pietzsch <rene.pietzsch@eccenca.com>
 #set env
 ENV DEBIAN_FRONTEND noninteractive
 
-#set locale 
+#set locale
 RUN locale-gen en_US.UTF-8
 RUN update-locale LANG=en_US.UTF-8
 
-RUN \ 
+RUN \
    apt-get -qq update &&  \
    apt-get install -y postgresql-9.3 postgresql-contrib-9.3 && \
    apt-get install -y postgresql-9.3-postgis-2.1 libpq-dev sudo && \
