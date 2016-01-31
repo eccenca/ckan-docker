@@ -1,3 +1,9 @@
 [submodule "ckan"]
 	path = ckan
 	url = https://github.com/eccenca/ckan.git
+[submodule "contrib/docker/datasetpusher/contrib/docker/datasetpusher/datapusher"]
+	path = contrib/docker/datasetpusher/contrib/docker/datasetpusher/datapusher
+	url = https://github.com/ckan/datapusher.git
+[submodule "contrib/docker/datasetpusher/datapusher"]
+	path = contrib/docker/datasetpusher/datapusher
+	url = https://github.com/ckan/datapusher.git

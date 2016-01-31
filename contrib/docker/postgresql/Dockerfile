@@ -45,3 +45,7 @@ CMD ["/usr/local/bin/run"]
 ENV POSTGRESQL_USER ckan
 ENV POSTGRESQL_PASS ckan
 ENV POSTGRESQL_DB ckan
+
+ENV DATASTORE_DB datastore
+ENV DATASTORE_USER datastore_user
+ENV DATASTORE_PASS datastore_pass

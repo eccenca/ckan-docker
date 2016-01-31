@@ -1,11 +1,11 @@
 #!/bin/bash
-set -e
+set -eu
 
 mkdir /etc/ssl/private-copy
-mv /etc/ssl/private/* /etc/ssl/private-copy/ 
-rm -r /etc/ssl/private 
-mv /etc/ssl/private-copy /etc/ssl/private 
-chmod -R 0700 /etc/ssl/private 
+mv /etc/ssl/private/* /etc/ssl/private-copy/
+rm -r /etc/ssl/private
+mv /etc/ssl/private-copy /etc/ssl/private
+chmod -R 0700 /etc/ssl/private
 chown -R postgres /etc/ssl/private
 
 POSTGRESQL_USER=${POSTGRESQL_USER:-"docker"}
@@ -16,6 +16,10 @@ POSTGRESQL_TEMPLATE=${POSTGRESQL_TEMPLATE:-"DEFAULT"}
 POSTGRESQL_BIN=/usr/lib/postgresql/9.3/bin/postgres
 POSTGRESQL_CONFIG_FILE=/etc/postgresql/9.3/main/postgresql.conf
 POSTGRESQL_DATA=/var/lib/postgresql/9.3/main
+
+DATASTORE_DB=${DATASTORE_DB:-datastore}
+DATASTORE_USER=${DATASTORE_USER:-datastore_user}
+DATASTORE_PASS=${DATASTORE_PASS:-datastore_pass}
 
 POSTGRESQL_SINGLE="sudo -u postgres $POSTGRESQL_BIN --single --config-file=$POSTGRESQL_CONFIG_FILE"
 
@@ -36,5 +40,42 @@ $POSTGRESQL_SINGLE -j $POSTGRESQL_DB < /usr/share/postgresql/9.3/contrib/postgis
 $POSTGRESQL_SINGLE -j $POSTGRESQL_DB < /usr/share/postgresql/9.3/contrib/postgis-2.1/spatial_ref_sys.sql > /dev/null
 $POSTGRESQL_SINGLE $POSTGRESQL_DB <<< "ALTER TABLE spatial_ref_sys OWNER TO $POSTGRESQL_USER;" > /dev/null
 $POSTGRESQL_SINGLE $POSTGRESQL_DB <<< "ALTER TABLE geometry_columns OWNER TO $POSTGRESQL_USER;" > /dev/null
+
+# create Datastore user
+$POSTGRESQL_SINGLE <<< "CREATE USER $DATASTORE_USER WITH PASSWORD '$DATASTORE_PASS';" > /dev/null
+#create Datastore database
+$POSTGRESQL_SINGLE <<< "CREATE DATABASE $DATASTORE_DB OWNER $POSTGRESQL_USER TEMPLATE $POSTGRESQL_TEMPLATE;" > /dev/null
+$POSTGRESQL_SINGLE <<< "GRANT SELECT ON ALL TABLES IN SCHEMA public TO $DATASTORE_USER;" > /dev/null
+$POSTGRESQL_SINGLE <<< "ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO $DATASTORE_USER;" > /dev/null
+
+#sudo -u postgres $POSTGRESQL_BIN --config-file=$POSTGRESQL_CONFIG_FILE
+# setuser postgres $POSTGRESQL_BIN --config-file=$POSTGRESQL_CONFIG_FILE \
+# <<-EOF
+#    \connect $DATASTORE_DB
+
+#     -- revoke permissions for the read-only user
+#     REVOKE CREATE ON SCHEMA public FROM PUBLIC;
+#     REVOKE USAGE ON SCHEMA public FROM PUBLIC;
+
+#     GRANT CREATE ON SCHEMA public TO "$POSTGRESQL_USER";
+#     GRANT USAGE ON SCHEMA public TO "$POSTGRESQL_USER";
+
+#     GRANT CREATE ON SCHEMA public TO "$DATASTORE_USER";
+#     GRANT USAGE ON SCHEMA public TO "$DATASTORE_USER";
+
+#     -- take connect permissions from main db
+#     REVOKE CONNECT ON DATABASE "$POSTGRESQL_DB" FROM "$DATASTORE_USER";
+
+#     -- grant select permissions for read-only user
+#     GRANT CONNECT ON DATABASE "$DATASTORE_DB" TO "$DATASTORE_USER";
+#     GRANT USAGE ON SCHEMA public TO "$DATASTORE_USER";
+
+#     -- grant access to current tables and views to read-only user
+#     GRANT SELECT ON ALL TABLES IN SCHEMA public TO "$DATASTORE_USER";
+
+#     -- grant access to new tables and views by default
+#     ALTER DEFAULT PRIVILEGES FOR USER "$DATASTORE_USER" IN SCHEMA public
+#        GRANT SELECT ON TABLES TO "$DATASTORE_USER";
+# EOF
 
 exec sudo -u postgres $POSTGRESQL_BIN --config-file=$POSTGRESQL_CONFIG_FILE
