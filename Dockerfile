@@ -5,7 +5,7 @@
 # with scope to ckan
 #
 ####
-FROM eccenca/baseimage:1.0.1
+FROM eccenca/baseimage:1.1.1
 MAINTAINER Henri Knochenhauer <henri.knochenhauer@eccenca.com>
 MAINTAINER René Pietzsch <rene.pietzsch@eccenca.com>
 
@@ -21,6 +21,9 @@ ENV CKAN ckan-$CKAN_VERSION
 ENV CKAN_HOME /usr/lib/ckan/default
 ENV CKAN_CONFIG /etc/ckan/default
 ENV CKAN_DATA /var/lib/ckan
+ENV CONFIG ${CKAN_CONFIG}/ckan.ini
+ENV CKAN_MAX_FILE_SIZE 10
+ENV CKAN_MAX_IMAGE_SIZE 2
 
 # Install required packages
 RUN apt-get -y update && \
