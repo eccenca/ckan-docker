@@ -9,8 +9,7 @@ export TAG=eccenca/ckan-docker:latest
 build: build-ckan
 
 build-ckan:
-	$(DOCKER_CMD) pull eccenca/baseimage:1.0.0
-	$(DOCKER_CMD) build -t ${NAME} .
+	$(DOCKER_CMD) build --pull=true -t ${NAME} .
 	$(DOCKER_CMD) tag -f $(NAME) ${TAG}
 
 run:

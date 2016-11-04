@@ -53,6 +53,10 @@ CKANEXT_LE_DATAPROXY_URL=${CKANEXT_LE_DATAPROXY_URL:-//jsonpdataproxy.appspot.co
 # ckanext-harvest backend config
 CKANEXT_HARVEST_BACKEND=${CKANEXT_HARVEST_BACKEND:-}
 
+# ckanext-spatial config
+CKANEXT_SPATIAL_VALIDATOR_PROFILE=${CKANEXT_SPATIAL_VALIDATOR_PROFILE:-}
+CKANEXT_SPATIAL_HARVEST_CONTINUE_ON_VALIDATION_ERRORS=${CKANEXT_SPATIAL_HARVEST_CONTINUE_ON_VALIDATION_ERRORS:-False}
+
 set -eu
 
 CONFIG="${CKAN_CONFIG}/ckan.ini"
@@ -138,6 +142,16 @@ write_config () {
   ## add redis harvester config to ckan.ini:
   if [ ! -z "$DATABASE_URL" ]; then
   	sed -i -e "s&^## Logging configuration&# ckanext-harvest harvest backend config\nckan.harvest.mq.type = ${CKANEXT_HARVEST_BACKEND}\n\n## Logging configuration&" "$CONFIG"
+  fi
+
+  ## add custom validators for ckanext-spatial:
+  if [ ! -z "$CKANEXT_SPATIAL_VALIDATOR_PROFILE" ]; then
+    echo "ckan.spatial.validator.profiles = ${CKANEXT_SPATIAL_VALIDATOR_PROFILE}" >> "$CONFIG"
+  fi
+
+  ## set mode for validation in ckanext-spatial:
+  if [ ! -z "$CKANEXT_SPATIAL_HARVEST_CONTINUE_ON_VALIDATION_ERRORS" ]; then
+    echo "ckanext.spatial.harvest.continue_on_validation_errors = ${CKANEXT_SPATIAL_HARVEST_CONTINUE_ON_VALIDATION_ERRORS}" >> "$CONFIG"
   fi
 
   echo "
