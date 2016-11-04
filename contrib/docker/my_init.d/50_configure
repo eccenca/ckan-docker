@@ -146,12 +146,12 @@ write_config () {
 
   ## add custom validators for ckanext-spatial:
   if [ ! -z "$CKANEXT_SPATIAL_VALIDATOR_PROFILE" ]; then
-    echo "ckan.spatial.validator.profiles = ${CKANEXT_SPATIAL_VALIDATOR_PROFILE}" >> "$CONFIG"
+    sed -i -e "s&^## Logging configuration&# # ckanext-spatial harvest validation config\nckan.spatial.validator.profiles = ${CKANEXT_SPATIAL_VALIDATOR_PROFILE}\n\n## Logging configuration&" "$CONFIG"
   fi
 
   ## set mode for validation in ckanext-spatial:
   if [ ! -z "$CKANEXT_SPATIAL_HARVEST_CONTINUE_ON_VALIDATION_ERRORS" ]; then
-    echo "ckanext.spatial.harvest.continue_on_validation_errors = ${CKANEXT_SPATIAL_HARVEST_CONTINUE_ON_VALIDATION_ERRORS}" >> "$CONFIG"
+        sed -i -e "s&^## Logging configuration&# ckanext-spatial harvest validation config\nckanext.spatial.harvest.continue_on_validation_errors = ${CKANEXT_SPATIAL_HARVEST_CONTINUE_ON_VALIDATION_ERRORS}\n\n## Logging configuration&" "$CONFIG"
   fi
 
   echo "
