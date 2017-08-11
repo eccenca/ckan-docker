@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Fixed
 - download link for solr
 
+### Changed
+- refactor postgres image
+
 ## [2.2.3-7] 2017-08-11
 
 ### Changed
